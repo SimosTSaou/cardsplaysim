@@ -13,6 +13,7 @@ int main()
 	socket.setBlocking(false);
 	bool update = false;
 	sf::Vector2f prevPos, p2Pos;
+	sf::TcpListener listener;
 	
 	//You choose side: server or client
 	std::cout << "Enter 's' for server or 'c' for client" << std::endl;
@@ -20,18 +21,32 @@ int main()
 
 	//if chose server you start listening to your open port
 	if(connectionType == 's')
-	{
-		sf::TcpListener listener;
-		listener.listen(port);
-		listener.accept(socket);
+	{	
+		std::cout << "try to listen to port" << std::endl;
+		while (listener.listen(port) != sf::Socket::Done) {
+		}
+		std::cout << "listen success" << std::endl;
+		
+		std::cout << "try to accept client connection" << std::endl;
+		while (listener.accept(socket) != sf::Socket::Done) {
+		}
+		std::cout << "client connection accepted" << std::endl;
+		
+		std::cout << "client's ip address: "<< socket.getRemoteAddress() << std::endl;
+		std::cout << "client's port: "<< socket.getRemotePort() << std::endl;
+		
 	}	
 	//else if chose client you connect to the ip and port of the server that the one who is server gave you
 	else 
 	{	
 		std::cout <<"Enter the ip of the server" << std::endl;
 		std::cin >> ip;
+		std::cout << "try to connect to server" << std::endl;
 		while (socket.connect(ip, port) != sf::Socket::Done) {
 		}
+		std::cout << "connected to server" << std::endl;
+		std::cout << "client's ip address: "<< socket.getRemoteAddress() << std::endl;
+		std::cout << "client's port: "<< socket.getRemotePort() << std::endl;
 	}
 	
 	//make a window
@@ -57,6 +72,10 @@ int main()
 	while(window.isOpen()){
 		while(window.pollEvent(event)){
 			if (event.type == sf::Event::Closed){
+				listener.close();
+				std::cout << "listener closed" << std::endl;
+				socket.disconnect();
+				std::cout << "socket closed" << std::endl;
 				window.close();
 			}
 			//this is needed when testing  both client and server on the same computer, so not both windows take the keyboard hits
