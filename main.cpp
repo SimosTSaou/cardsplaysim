@@ -3,31 +3,21 @@
 #include <iostream>
 int main()
 {	
-	//write the ip address of the server inside the string and comment the second line, 
-	//uncomment the second line for testing both client and server on your pc
-	int port;
 	sf::IpAddress ip;
-	
-	std::cout <<"Enter the ip of the server" << std::endl;
-	std::cin >> ip;
-	std::cout <<"Enter the port of the server" << std::endl;
-	std::cin >> port;
+	const unsigned short port = 23336;
 
-	//sf::IpAddress ip = sf::IpAddress::getLocalAddress();
-	
 	//some initializations
 	sf::TcpSocket socket;
 	char connectionType;
 	std::size_t received;
 	socket.setBlocking(false);
 	bool update = false;
-	std::string text = "Connected to: ";
 	sf::Vector2f prevPos, p2Pos;
 	
 	//You choose side: server or client
 	std::cout << "Enter 's' for server or 'c' for client" << std::endl;
 	std::cin >> connectionType;
-	
+
 	//if chose server you start listening to your open port
 	if(connectionType == 's')
 	{
@@ -37,10 +27,10 @@ int main()
 	}	
 	//else if chose client you connect to the ip and port of the server that the one who is server gave you
 	else 
-	{
-		//std::cout << "status: " << socket.connect(ip, port) << std::endl;
+	{	
+		std::cout <<"Enter the ip of the server" << std::endl;
+		std::cin >> ip;
 		while (socket.connect(ip, port) != sf::Socket::Done) {
-			
 		}
 	}
 	
